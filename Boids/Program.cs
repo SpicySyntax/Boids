@@ -10,6 +10,7 @@ public class BoidsEnvironment : Form
     private Swarm swarm;
     private Image iconRegular;
     private Image iconZombie;
+    private Point mousePos;
 
 
     private static void Main()
@@ -19,7 +20,7 @@ public class BoidsEnvironment : Form
     public BoidsEnvironment()
     {
         //hard code UI
-        int boundary = 640;
+        int boundary = 700;
         SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
         FormBorderStyle = FormBorderStyle.FixedToolWindow;
         StartPosition = FormStartPosition.CenterScreen;
@@ -36,7 +37,7 @@ public class BoidsEnvironment : Form
     }
     protected override void OnPaint(PaintEventArgs e)
     {
-        foreach(Boid boid in swarm.Boids)
+        foreach (Boid boid in swarm.Boids)
         {
             float angle;
             if (boid.dx == 0) angle = 90f;
@@ -53,7 +54,7 @@ public class BoidsEnvironment : Form
     private static Image CreateIcon(Brush brush)
     {
         Bitmap icon = new Bitmap(16, 16);
-        Graphics g =  Graphics.FromImage(icon);
+        Graphics g = Graphics.FromImage(icon);
         Point p1 = new Point(0, 16);
         Point p2 = new Point(16, 8);
         Point p3 = new Point(0, 0);
@@ -65,7 +66,9 @@ public class BoidsEnvironment : Form
     }
     private void timerTick(object sender, EventArgs e)
     {
-        swarm.MoveBoids();
+        this.mousePos = this.PointToClient(new Point(Cursor.Position.X, Cursor.Position.Y));
+        Console.WriteLine(mousePos.ToString());
+        swarm.MoveBoids(mousePos);
         Invalidate();
     }
 }
@@ -74,16 +77,17 @@ public class Swarm
     public List<Boid> Boids = new List<Boid>();
     public Swarm(int boundary, int boidCount)
     {
-        for( int i = 0; i < boidCount; i++)
+        for (int i = 0; i < boidCount; i++)
         {
-            Boids.Add(new Boid((i > boidCount - 4), boundary));
+            //remove zombies for now
+            Boids.Add(new Boid(i - 3 < 0, boundary));
         }
     }
-    public void MoveBoids()
+    public void MoveBoids(Point mousePos)
     {
-        foreach(Boid boid in Boids)
+        foreach (Boid boid in Boids)
         {
-            boid.Move(Boids);
+            boid.Move(mousePos, Boids);
         }
     }
 
@@ -95,7 +99,7 @@ public class Swarm
     **/
 public class Boid
 {
-    
+
     private static Random rand = new Random();
     private static float border = 100f;
     private static float sight = 75f;
@@ -113,23 +117,29 @@ public class Boid
         this.boundary = boundary;
         this.zombie = zombie;
     }
-    
-    public void Move(List<Boid> boids)
+
+    public void Move(Point mousePos, List<Boid> boids )
     {
-        
-         if(!zombie)
-         {
-            Flock(boids);
-         } else {
+
+
+
+       
+
+        if (!zombie)
+        {
+            Flock(mousePos, boids);
+        }
+        else
+        {
             Hunt(boids);
-         }
-         CheckBounds();
-         CheckSpeed();
-         position.X += dx;
-         position.Y += dy;
+        }
+        CheckBounds();
+        CheckSpeed();
+        position.X += dx;
+        position.Y += dy;
 
     }
-    private void Flock(List<Boid> boids)
+    private void Flock(Point mousePos, List<Boid> boids)
     {
         foreach (Boid boid in boids)
         {
@@ -155,19 +165,32 @@ public class Boid
                     dy += boid.dy * 0.5f;
                 }
             }
-            if ( boid.zombie && distance < sight)
+            if (boid.zombie && distance < sight)
             {
                 //dodge zombies
                 dx += position.X - boid.position.X;
-                dy += position.Y - boid.position.X;
+                dy += position.Y - boid.position.Y;
             }
+            if (CheckMouseOnWindow(mousePos))
+            {
+                distance = Distance(position, mousePos);
+                if(distance < sight)
+                {
+                    //dodge mouse
+                    dx += position.X - mousePos.X;
+                    dy += position.Y - mousePos.Y;
+
+                }
+            }
+
+            
         }
     }
     private void Hunt(List<Boid> boids)
     {
         float range = float.MaxValue;
         Boid prey = null;
-         foreach(Boid boid in boids)
+        foreach (Boid boid in boids)
         {
             if (!boid.zombie)
             {
@@ -186,10 +209,19 @@ public class Boid
             dy += prey.position.Y - position.Y;
         }
     }
+    
     private static float Distance(PointF p1, PointF p2)
     {
         double val = Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2);
         return (float)Math.Sqrt(val);
+    }
+    private bool CheckMouseOnWindow(Point mousePos)
+    {
+        if (mousePos.X < 0) return false;
+        if (mousePos.X > boundary) return false;
+        if (mousePos.Y < 0) return false;
+        if (mousePos.Y > boundary) return false;
+        return true;
     }
     private void CheckBounds()
     {
@@ -207,7 +239,8 @@ public class Boid
         {
 
             s = speed;
-        }else
+        }
+        else
         {
             s = speed / 4f;
         }
@@ -219,8 +252,7 @@ public class Boid
             dy = dy * s / mag;
         }
     }
-    
+
 
 
 }
-
