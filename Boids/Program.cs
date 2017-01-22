@@ -27,7 +27,7 @@ public class BoidsEnvironment : Form
         ClientSize = new Size(boundary, boundary);
         iconRegular = CreateIcon(Brushes.Blue);
         iconZombie = CreateIcon(Brushes.Red);
-        swarm = new Swarm(boundary, 20);
+        swarm = new Swarm(boundary, 30);
         timer = new Timer();
         timer.Tick += new EventHandler(this.timerTick);
         timer.Interval = 75;
@@ -110,10 +110,11 @@ public class Boid
     public float dy;
     public bool zombie;
     public PointF position;
-
+    private Random random;
     public Boid(bool zombie, int boundary)
     {
         position = new PointF(rand.Next(boundary), rand.Next(boundary));
+        random = new Random();
         this.boundary = boundary;
         this.zombie = zombie;
     }
@@ -160,31 +161,48 @@ public class Boid
                 }
                 if (distance < sight)
                 {
+
                     //Alight movement
                     dx += boid.dx * 0.5f;
                     dy += boid.dy * 0.5f;
+
                 }
             }
             if (boid.zombie && distance < sight)
             {
-                //dodge zombies
-                dx += position.X - boid.position.X;
-                dy += position.Y - boid.position.Y;
+                //dodge zombie
+                double weight = rand.NextDouble()*distance/50;
+                dy += (float)weight * (position.Y - boid.position.Y);
+                dx += (float)weight * (position.X - boid.position.X);
+
             }
             if (CheckMouseOnWindow(mousePos))
             {
                 distance = Distance(position, mousePos);
-                if(distance < sight)
+
+                if (distance < sight)
                 {
                     //dodge mouse
-                    dx += position.X - mousePos.X;
-                    dy += position.Y - mousePos.Y;
+                    double weight = rand.NextDouble()*distance/50;
+                    dy += (float) weight * ( position.Y - mousePos.Y );
+                    dx += (float) weight * ( position.X - mousePos.X );
+
 
                 }
             }
 
             
         }
+    }
+    private void Dodge(PointF p1, PointF p2,float dx, float dy)
+    {
+        //dodge 
+        double weight = rand.NextDouble();
+        dy += p1.Y - p2.Y;
+        dx += p1.X - p2.X;
+        dy = dy * (float)weight;
+        dx = dx * (float)weight;
+
     }
     private void Hunt(List<Boid> boids)
     {
@@ -252,7 +270,4 @@ public class Boid
             dy = dy * s / mag;
         }
     }
-
-
-
 }
