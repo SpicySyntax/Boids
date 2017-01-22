@@ -109,7 +109,7 @@ public class Boid
 
     public Boid(bool zombie, int boundary)
     {
-        this.position = new PointF(rand.Next(boundary), rand.Next(boundary));
+        position = new PointF(rand.Next(boundary), rand.Next(boundary));
         this.boundary = boundary;
         this.zombie = zombie;
     }
@@ -136,7 +136,7 @@ public class Boid
             float distance = Distance(position, boid.position);
             if (boid != this && !boid.zombie)
             {
-                if (distance <= space)
+                if (distance < space)
                 {
                     //Create space (boids stay seperated)
                     dx += position.X - boid.position.X;
@@ -145,8 +145,8 @@ public class Boid
                 else if (distance < sight)
                 {
                     //Flock toward center
-                    dx += (boid.position.X - this.position.X) * 0.05f;
-                    dy += (boid.position.Y = this.position.Y) * 0.05f;
+                    dx += (boid.position.X - position.X) * 0.05f;
+                    dy += (boid.position.Y - position.Y) * 0.05f;
                 }
                 if (distance < sight)
                 {
@@ -213,7 +213,7 @@ public class Boid
         }
         //calculate magnitude of velocity vector
         float mag = Distance(new PointF(0f, 0f), new PointF(dx, dy));
-        if(mag > s)
+        if (mag > s)
         {
             dx = dx * s / mag;
             dy = dy * s / mag;
