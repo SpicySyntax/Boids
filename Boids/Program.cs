@@ -27,7 +27,7 @@ public class BoidsEnvironment : Form
         ClientSize = new Size(boundary, boundary);
         iconRegular = CreateIcon(Brushes.Blue);
         iconZombie = CreateIcon(Brushes.Red);
-        swarm = new Swarm(boundary, 30);
+        swarm = new Swarm(boundary, 30,5);
         timer = new Timer();
         timer.Tick += new EventHandler(this.timerTick);
         timer.Interval = 75;
@@ -67,7 +67,6 @@ public class BoidsEnvironment : Form
     private void timerTick(object sender, EventArgs e)
     {
         this.mousePos = this.PointToClient(new Point(Cursor.Position.X, Cursor.Position.Y));
-        Console.WriteLine(mousePos.ToString());
         swarm.MoveBoids(mousePos);
         Invalidate();
     }
@@ -75,12 +74,12 @@ public class BoidsEnvironment : Form
 public class Swarm
 {
     public List<Boid> Boids = new List<Boid>();
-    public Swarm(int boundary, int boidCount)
+    public Swarm(int boundary, int boidCount, int numZombs)
     {
-        for (int i = 0; i < boidCount; i++)
+        for (int i = 0; i < boidCount+numZombs; i++)
         {
             //remove zombies for now
-            Boids.Add(new Boid(i - 3 < 0, boundary));
+            Boids.Add(new Boid(i - numZombs < 0, boundary));
         }
     }
     public void MoveBoids(Point mousePos)
@@ -102,7 +101,7 @@ public class Boid
 
     private static Random rand = new Random();
     private static float border = 100f;
-    private static float sight = 75f;
+    private static float sight = 85f;
     private static float space = 30f;
     private static float speed = 12f;
     private float boundary;
@@ -123,8 +122,6 @@ public class Boid
     {
 
 
-
-       
 
         if (!zombie)
         {
@@ -171,7 +168,7 @@ public class Boid
             if (boid.zombie && distance < sight)
             {
                 //dodge zombie
-                double weight = rand.NextDouble()*distance/50;
+                double weight = rand.NextDouble() * 50 / distance;
                 dy += (float)weight * (position.Y - boid.position.Y);
                 dx += (float)weight * (position.X - boid.position.X);
 
@@ -183,7 +180,7 @@ public class Boid
                 if (distance < sight)
                 {
                     //dodge mouse
-                    double weight = rand.NextDouble()*distance/50;
+                    double weight = rand.NextDouble() * 50 / distance;
                     dy += (float) weight * ( position.Y - mousePos.Y );
                     dx += (float) weight * ( position.X - mousePos.X );
 
