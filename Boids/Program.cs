@@ -27,7 +27,7 @@ public class BoidsEnvironment : Form
         ClientSize = new Size(boundary, boundary);
         iconRegular = CreateIcon(Brushes.Blue);
         iconZombie = CreateIcon(Brushes.Red);
-        swarm = new Swarm(boundary, 30,5);
+        swarm = new Swarm(boundary, 50,5);
         timer = new Timer();
         timer.Tick += new EventHandler(this.timerTick);
         timer.Interval = 75;
@@ -168,7 +168,7 @@ public class Boid
             if (boid.zombie && distance < sight)
             {
                 //dodge zombie
-                double weight = rand.NextDouble() * 50 / distance;
+                double weight = rand.NextDouble() * 50 /distance;
                 dy += (float)weight * (position.Y - boid.position.Y);
                 dx += (float)weight * (position.X - boid.position.X);
 

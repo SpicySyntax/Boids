@@ -1,0 +1,8 @@
+c:\users\nickp\onedrive\documents\visual studio 2015\Projects\Boids\Boids\bin\Debug\Boids.exe.config
+c:\users\nickp\onedrive\documents\visual studio 2015\Projects\Boids\Boids\bin\Debug\Boids.exe
+c:\users\nickp\onedrive\documents\visual studio 2015\Projects\Boids\Boids\bin\Debug\Boids.pdb
+c:\users\nickp\onedrive\documents\visual studio 2015\Projects\Boids\Boids\obj\Debug\Boids.csprojResolveAssemblyReference.cache
+c:\users\nickp\onedrive\documents\visual studio 2015\Projects\Boids\Boids\obj\Debug\Boids.Properties.Resources.resources
+c:\users\nickp\onedrive\documents\visual studio 2015\Projects\Boids\Boids\obj\Debug\Boids.csproj.GenerateResource.Cache
+c:\users\nickp\onedrive\documents\visual studio 2015\Projects\Boids\Boids\obj\Debug\Boids.exe
+c:\users\nickp\onedrive\documents\visual studio 2015\Projects\Boids\Boids\obj\Debug\Boids.pdb
