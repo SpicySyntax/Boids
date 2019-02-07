@@ -32,8 +32,6 @@ public class BoidsEnvironment : Form
         timer.Tick += new EventHandler(this.timerTick);
         timer.Interval = 75;
         timer.Start();
-
-
     }
     protected override void OnPaint(PaintEventArgs e)
     {
