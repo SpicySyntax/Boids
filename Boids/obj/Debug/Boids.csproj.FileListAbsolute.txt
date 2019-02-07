@@ -1,8 +1,0 @@
-D:\git_projects\Boids\Boids\Boids\bin\Debug\Boids.exe.config
-D:\git_projects\Boids\Boids\Boids\bin\Debug\Boids.exe
-D:\git_projects\Boids\Boids\Boids\bin\Debug\Boids.pdb
-D:\git_projects\Boids\Boids\Boids\obj\Debug\Boids.csprojResolveAssemblyReference.cache
-D:\git_projects\Boids\Boids\Boids\obj\Debug\Boids.Properties.Resources.resources
-D:\git_projects\Boids\Boids\Boids\obj\Debug\Boids.csproj.GenerateResource.Cache
-D:\git_projects\Boids\Boids\Boids\obj\Debug\Boids.exe
-D:\git_projects\Boids\Boids\Boids\obj\Debug\Boids.pdb
